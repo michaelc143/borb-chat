@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
 import sqlite3
 from datetime import datetime
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/api/messages/<chatroom>', methods=['GET'])
 def get_messages_for_chatroom(chatroom):
@@ -97,4 +99,4 @@ if __name__ == '__main__':
         create_tables(conn)
         conn.close()
     # run api server locally
-    app.run(host='0.0.0.0', port=105)
+    app.run(port=5000, debug=True)

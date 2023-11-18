@@ -1,2 +1,37 @@
+# API
 *.db
 __pycache__/
+
+# dependencies
+BorbChatUI/node_modules/
+
+# Expo
+BorbChatUI/.expo/
+BorbChatUI/dist/
+BorbChatUI/web-build/
+
+# Native
+BorbChatUI/*.orig.*
+BorbChatUI/*.jks
+BorbChatUI/*.p8
+BorbChatUI/*.p12
+BorbChatUI/*.key
+BorbChatUI/*.mobileprovision
+
+# Metro
+BorbChatUI/.metro-health-check*
+
+# debug
+BorbChatUI/npm-debug.*
+BorbChatUI/yarn-debug.*
+BorbChatUI/yarn-error.*
+
+# macOS
+BorbChatUI/.DS_Store
+BorbChatUI/*.pem
+
+# local env files
+BorbChatUI/.env*.local
+
+# typescript
+BorbChatUI/*.tsbuildinfo
