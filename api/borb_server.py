@@ -1,5 +1,5 @@
-from flask import Flask, request, jsonify
 import sqlite3
+from flask import Flask, request, jsonify
 from datetime import datetime
 from flask_cors import CORS
 
@@ -8,12 +8,13 @@ CORS(app)
 
 @app.route('/api/messages/<chatroom>', methods=['GET'])
 def get_messages_for_chatroom(chatroom):
+    """Gets messages for a specified chatroom"""
     conn = create_connection()
     cursor = conn.cursor()
-    
+
     query = f"SELECT * FROM {chatroom}"
     cursor.execute(query)
-    
+
     # Fetch all messages
     messages = cursor.fetchall()
     conn.close()
@@ -33,6 +34,7 @@ def get_messages_for_chatroom(chatroom):
 
 @app.route('/api/messages/<chatroom>', methods=['POST'])
 def post_message_to_chatroom(chatroom):
+    """Posts a message to a specified chatroom"""
     try:
         chatroom = chatroom
         data = request.get_json()
@@ -53,18 +55,29 @@ def post_message_to_chatroom(chatroom):
         conn.close()
 
         return jsonify({'message': 'Message posted successfully'}), 200
-        
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/chatrooms', methods=['GET'])
 def get_chatrooms():
-    chatrooms = ["chatterbox", "talktown"]
-    return jsonify(chatrooms)
+    """Returns a list of the available chatrooms"""
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
+        # Fetch all the results
+    table_names_db = cursor.fetchall()
+    table_names = []
+    for name_tuple in table_names_db:
+        table_name = name_tuple[0]
+        table_names.append(table_name)
+    conn.close()
+    return jsonify(table_names)
 
 
 
 def create_connection():
+    """Connects to db file"""
     db_file = '../borb.db'
     try:
         conn = sqlite3.connect(db_file)
@@ -75,8 +88,17 @@ def create_connection():
 
 # Crate tables and define schemas
 def create_tables(conn):
+    """Creates a table for each chatroom and specifies the schema"""
     try:
-        for chatroom in ["chatterbox", "talktown"]:
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;")
+        # Fetch all the results
+        table_names_db = cursor.fetchall()
+        table_names = []
+        for name_tuple in table_names_db:
+            table_name = name_tuple[0]
+            table_names.append(table_name)
+        for chatroom in table_names:
             cursor = conn.cursor()
             cursor.execute(f'''
                 CREATE TABLE IF NOT EXISTS {chatroom} (
