@@ -9,19 +9,24 @@ const ChatDrawer = createDrawerNavigator();
 
 export default function BorbChat() {
 
-  const [chatrooms, setChatrooms] = useState([]);
+  // const [chatrooms, setChatrooms] = useState([]);
+  const exampleChatrooms = ['Chatterbox', 'BorbChatCentral', 'BadgerFootball', 'BadgerBasketball', 'BadgerHockey'];
 
-  useEffect(() => {
-    api.get('/chatrooms')
-      .then((response) => setChatrooms(response.data))
-      .catch((error) => console.error('Axios Error:', error));
-  }, []);
+  // useEffect(() => {
+  //   api.get('/chatrooms')
+  //     .then((response) => setChatrooms(response.data))
+  //     .catch((error) => console.error('Axios Error:', error));
+  // }, []);
 
   return (
     <NavigationContainer>
       <ChatDrawer.Navigator>
         <ChatDrawer.Screen name='Home Page' component={HomePage} />
-        <ChatDrawer.Screen name='Chatroom' component={Chatroom} />
+        {
+          exampleChatrooms.map((chatroom) => {
+            return <ChatDrawer.Screen key={chatroom} name={chatroom} component={Chatroom} />
+          })
+        }
       </ChatDrawer.Navigator>
     </NavigationContainer>
   );

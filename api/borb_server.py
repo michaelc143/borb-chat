@@ -111,6 +111,7 @@ def create_tables(conn):
                 CREATE TABLE IF NOT EXISTS {chatroom} (
                     id INTEGER PRIMARY KEY,
                     poster TEXT NOT NULL,
+                    title TEXT NOT NULL,
                     content TEXT NOT NULL,
                     postDate TEXT NOT NULL
                 )
