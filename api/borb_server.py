@@ -7,14 +7,14 @@ app = Flask(__name__)
 @app.route('/api/messages/<chatroom>', methods=['GET'])
 def get_messages_for_chatroom(chatroom):
     conn = create_connection()
-    cursor = connection.cursor()
+    cursor = conn.cursor()
     
-    query = "SELECT * FROM messages WHERE chatroom = ?"
-    cursor.execute(query, (chatroom))
+    query = f"SELECT * FROM {chatroom}"
+    cursor.execute(query)
     
     # Fetch all messages
     messages = cursor.fetchall()
-    connection.close()
+    conn.close()
 
     # Convert messages to a list of dictionaries
     messages_list = []
@@ -27,7 +27,7 @@ def get_messages_for_chatroom(chatroom):
         }
         messages_list.append(message_dict)
 
-    return jsonify(messages_list)
+    return jsonify(messages_list), 200
 
 @app.route('/api/messages/<chatroom>', methods=['POST'])
 def post_message_to_chatroom(chatroom):
@@ -38,17 +38,17 @@ def post_message_to_chatroom(chatroom):
         content = data.get('content')
         postDate = datetime.now()
         # validate request body
-        if not poster or not content or not post_date:
+        if not poster or not content or not postDate:
             return jsonify({'error': 'Poster, content, and postDate are required for posting a message'}), 400
         conn = create_connection()
-        cursor = connection.cursor()
+        cursor = conn.cursor()
         # insert the message into the chatroom's table
         query = f"INSERT INTO {chatroom} (poster, content, postDate) VALUES (?, ?, ?)"
-        cursor.execute(query, (poster, content, post_date))
+        cursor.execute(query, (poster, content, postDate))
 
         # Commit the transaction and close the connection
-        connection.commit()
-        connection.close()
+        conn.commit()
+        conn.close()
 
         return jsonify({'message': 'Message posted successfully'}), 200
         
@@ -85,7 +85,6 @@ def create_tables(conn):
                 )
             ''')
             conn.commit()
-            print("worked")
     except sqlite3.Error as e:
         print(e)
 
