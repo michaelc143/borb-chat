@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 function HomePage() {
     return (
         <View style={styles.container}>
-            <Text>This is the home page!</Text>
+            <Text style={{fontSize: 24, marginTop: 40}}>Welcome To BorbChat!</Text>
         </View>
     );
 }
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#fff',
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
     },
 });
 

@@ -1,10 +1,17 @@
 import sqlite3
+import os
 from flask import Flask, request, jsonify
 from datetime import datetime
 from flask_cors import CORS
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
+
+host = os.getenv("FLASK_RUN_HOST", "localhost")
+port = int(os.getenv("FLASK_RUN_PORT", 5000))
 
 @app.route('/api/messages/<chatroom>', methods=['GET'])
 def get_messages_for_chatroom(chatroom):
@@ -115,10 +122,10 @@ def create_tables(conn):
 
 
 if __name__ == '__main__':
-    # connect to db amd do setup
-    conn = create_connection()
-    if conn is not None:
-        create_tables(conn)
-        conn.close()
+    # # connect to db amd do setup
+    # conn = create_connection()
+    # if conn is not None:
+    #     create_tables(conn)
+    #     conn.close()
     # run api server locally
-    app.run(port=5000, debug=True)
+    app.run(host=host, port=port, debug=True)
