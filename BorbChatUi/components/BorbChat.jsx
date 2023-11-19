@@ -1,47 +1,46 @@
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import ChatroomScreen from './Chatroom';
 import HomePage from './HomePage';
 import { useState } from 'react';
 import LoginScreen from './LoginScreen';
 import LogoutScreen from './LogoutScreen';
+import SettingsScreen from './SettingsScreen';
 // import api from '../apiService';
 
-const ChatDrawer = createDrawerNavigator();
+const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
+
+const ChatTabs = () => (
+  <Tab.Navigator>
+    <Tab.Screen name="Home" component={HomePage} options={{headerShown: false}} />
+    <Tab.Screen name="Settings" component={SettingsScreen} options={{headerShown: false}} />
+  </Tab.Navigator>
+);
 
 export default function BorbChat() {
-
-  // const [chatrooms, setChatrooms] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const exampleChatrooms = ['Chatterbox', 'BorbChatCentral', 'BadgerFootball', 'BadgerBasketball', 'BadgerHockey'];
 
-  // useEffect(() => {
-  //   api.get('/chatrooms')
-  //     .then((response) => setChatrooms(response.data))
-  //     .catch((error) => console.error('Axios Error:', error));
-  // }, []);
-
-  if(isLoggedIn) {
+  if (isLoggedIn) {
     return (
       <NavigationContainer>
-        <ChatDrawer.Navigator
-          initialRouteName='Home Page'
+        <Drawer.Navigator
+          initialRouteName="Home Page"
           screenOptions={{
             drawerActiveTintColor: 'purple',
           }}
         >
-          <ChatDrawer.Screen name='Home Page' component={HomePage} />
-          {
-            exampleChatrooms.map((chatroom) => {
-              return <ChatDrawer.Screen key={chatroom} name={chatroom} component={ChatroomScreen} />
-            })
-          }
-        <ChatDrawer.Screen name='Logout'> 
-          {(props) => (
-            <LogoutScreen {...props} setIsLoggedIn={setIsLoggedIn} />
-          )}
-        </ChatDrawer.Screen>
-        </ChatDrawer.Navigator>
+          <Drawer.Screen name="Home Page" component={ChatTabs} />
+          {exampleChatrooms.map((chatroom) => (
+            <Drawer.Screen key={chatroom} name={chatroom} component={ChatroomScreen} />
+          ))}
+          <Drawer.Screen name="Logout">
+            {(props) => <LogoutScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+          </Drawer.Screen>
+        </Drawer.Navigator>
       </NavigationContainer>
     );
   }
